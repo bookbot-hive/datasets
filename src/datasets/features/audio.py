@@ -181,10 +181,10 @@ class Audio:
 
             download_config = DownloadConfig(token=token)
             with xopen(path, "rb", download_config=download_config) as f:
-                array, sampling_rate = sf.read(f)
+                array, sampling_rate = sf.read(f, dtype="float32")
 
         else:
-            array, sampling_rate = sf.read(file)
+            array, sampling_rate = sf.read(file, dtype="float32")
 
         array = array.T
         if self.mono:

@@ -124,18 +124,18 @@ REQUIRED_PKGS = [
     # for downloading datasets over HTTPS
     "requests>=2.19.0",
     # progress bars in download and scripts
-    "tqdm>=4.62.1",
+    "tqdm>=4.66.3",
     # for fast hashing
     "xxhash",
     # for better multiprocessing
     "multiprocess",
     # to save datasets locally or on any filesystem
     # minimum 2023.1.0 to support protocol=kwargs in fsspec's `open`, `get_fs_token_paths`, etc.: see https://github.com/fsspec/filesystem_spec/pull/1143
-    "fsspec[http]>=2023.1.0,<=2024.2.0",
+    "fsspec[http]>=2023.1.0,<=2024.3.1",
     # for data streaming via http
     "aiohttp",
     # To get datasets from the Datasets Hub on huggingface.co
-    "huggingface-hub>=0.21.2",
+    "huggingface-hub>=0.21.2,<0.23.0",  # temporary pin: see https://github.com/huggingface/datasets/issues/6860
     # Utilities from PyPA to e.g., compare versions
     "packaging",
     # To parse YAML metadata from dataset cards
@@ -177,14 +177,15 @@ TESTS_REQUIRE = [
     "rarfile>=4.0",
     "sqlalchemy",
     "s3fs>=2021.11.1",  # aligned with fsspec[http]>=2021.11.1; test only on python 3.7 for now
-    "tensorflow>=2.3,!=2.6.0,!=2.6.1; sys_platform != 'darwin' or platform_machine != 'arm64'",
-    "tensorflow-macos; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "protobuf<4.0.0",  # 4.0.0 breaks compatibility with tensorflow<2.12
+    "tensorflow>=2.6.0",
     "tiktoken",
     "torch>=2.0.0",
     "soundfile>=0.12.1",
     "transformers",
     "typing-extensions>=4.6.1",  # due to conflict between apache-beam and pydantic
     "zstandard",
+    "polars[timezone]>=0.20.0",
 ]
 
 
@@ -226,8 +227,7 @@ DOCS_REQUIRE = [
     # Following dependencies are required for the Python reference to be built properly
     "transformers",
     "torch",
-    "tensorflow>=2.2.0,!=2.6.0,!=2.6.1; sys_platform != 'darwin' or platform_machine != 'arm64'",
-    "tensorflow-macos; sys_platform == 'darwin' and platform_machine == 'arm64'",
+    "tensorflow>=2.6.0",
 ]
 
 EXTRAS_REQUIRE = {
@@ -235,10 +235,9 @@ EXTRAS_REQUIRE = {
     "vision": VISION_REQUIRE,
     "apache-beam": ["apache-beam>=2.26.0"],
     "tensorflow": [
-        "tensorflow>=2.2.0,!=2.6.0,!=2.6.1; sys_platform != 'darwin' or platform_machine != 'arm64'",
-        "tensorflow-macos; sys_platform == 'darwin' and platform_machine == 'arm64'",
+        "tensorflow>=2.6.0",
     ],
-    "tensorflow_gpu": ["tensorflow-gpu>=2.2.0,!=2.6.0,!=2.6.1"],
+    "tensorflow_gpu": ["tensorflow>=2.6.0"],
     "torch": ["torch"],
     "jax": ["jax>=0.3.14", "jaxlib>=0.3.14"],
     "s3": ["s3fs"],
@@ -253,7 +252,7 @@ EXTRAS_REQUIRE = {
 
 setup(
     name="datasets",
-    version="2.18.1.dev0",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
+    version="2.19.2.dev0",  # expected format is one of x.y.z.dev0, or x.y.z.rc1 or x.y.z (no to dashes, yes to dots)
     description="HuggingFace community-driven open-source library of datasets",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
